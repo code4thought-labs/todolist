@@ -15,7 +15,13 @@ Todolist is a simple todo list project in order to practice integrations.
     - *Remove* an existing **List Item**,
     - *Edit* an existing **List Item** updating its `desciption`,
     - *Move* an existing **List Item** from one list to another.
-  - A **List Item** also keeps (and shows) its `last updated` date tot he user.
+  - A **List Item** also keeps (and shows) its `last updated` date to the user.
+
+Rules:
+ - A **Todo List** can have from 0 to N **List Items**
+ - A **List Item** can only exist if it is in a **Todo List**
+ - Every **Todo List** is unique based on its `name`
+ - Every **List Item** is unique based on its `name` in the context of a **Todo List** (no duplicated **List Items** in the same list)
 
 ### Technologies 
 Server:
