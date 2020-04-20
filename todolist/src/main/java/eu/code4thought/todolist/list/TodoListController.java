@@ -7,9 +7,9 @@ package eu.code4thought.todolist.list;
 @RestController
 @RequestMapping("/todolist")
 public class TodoListController {
-    @GetMapping("/{id}")
-    public String getOne(@PathVariable Long id) {
-        return "Hello " + id;
+    @GetMapping("/{username}")
+    public String getOne(@PathVariable String username) {
+        return "Hello, " + username + "!\n";
         // Connect to: http://localhost:8080/todolist/123
         // or Curl: `curl localhost:8080/todolist/123`
     }
