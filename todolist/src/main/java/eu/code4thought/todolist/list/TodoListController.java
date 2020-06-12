@@ -1,30 +1,21 @@
 package eu.code4thought.todolist.list;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/todolist")
 public class TodoListController {
-    private List<TodoList> database = new ArrayList<TodoList>(); // initialize list with items
-    private final TodoList first = new TodoList("first_todoList");
-
+    private final static List<TodoList> database = new ArrayList<>();
+    static {
+        database.add(new TodoList("first_todoList"));
+    }
 
     @GetMapping("/{name}")
-    public TodoList getOne(@PathVariable String name) {
-        // Everytime a request is sent, I add the first todoList with the item "item".
-        database.add(first);
-        ListItem first_item;
-        first_item = first.createItem("First Item!");
-
+    public TodoList getOne(@PathVariable String name){
         TodoList tempList = null;
         try{
-            tempList = searchDatabase(name);
+            tempList = findTodoListByName(name);
         }
         catch(NoSuchElementException e){
             System.out.println(e.getMessage());
@@ -41,12 +32,20 @@ public class TodoListController {
         return this.database;
     }
 
+    @PostMapping("/{name}")
+    public TodoList createTodoList(@PathVariable String name){
+        // First check if the list already exists
+        TodoList tempCreate = new TodoList(name);
+        database.add(tempCreate);
+        return tempCreate;
+    }
+
     // Explore this method's appropriate home class. Does not belong among endpoints.
-    private TodoList searchDatabase(String name) throws NoSuchElementException {
+    private TodoList findTodoListByName(String name) throws NoSuchElementException {
         for(TodoList list : database)
         {
             // instead of looping through database, use hashtable for O(1) access.
-            if (list.getName() == name){
+            if (list.getName().equals(name)){
                 return list;
             }
         }
