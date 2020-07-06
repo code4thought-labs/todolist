@@ -1,17 +1,25 @@
 package eu.code4thought.todolist.list;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Entity
+@Table(name="todolist")
 public class TodoList {
-    private String name;
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
+    private String name;
     private List<ListItem> items;
-    private static int next_id = 0;
+    private static long next_id = 0;
 
     public TodoList() {
-        this("defaultTodolist" + Integer.toString(next_id));
+        this("defaultTodolist" + String.valueOf(next_id));
     }
 
     public TodoList(String name) {

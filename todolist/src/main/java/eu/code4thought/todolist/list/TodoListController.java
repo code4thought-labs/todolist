@@ -35,9 +35,10 @@ public class TodoListController {
     @PostMapping("/{name}")
     public TodoList createTodoList(@PathVariable String name){
         // First check if the list already exists
-        TodoList tempCreate = new TodoList(name);
-        database.add(tempCreate);
-        return tempCreate;
+        //TodoList tempCreate = new TodoList(name);
+        //database.add(tempCreate);
+        TodoList savedTodoList = TodoListService.saveTodoList(new TodoList(name));
+        return savedTodoList;
     }
 
     // Explore this method's appropriate home class. Does not belong among endpoints.
