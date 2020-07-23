@@ -6,16 +6,16 @@ import java.util.*;
 @RestController
 @RequestMapping("/todolist")
 public class TodoListController {
-    private final static List<TodoList> database = new ArrayList<>();
-    static {
-        database.add(new TodoList("first_todoList"));
-    }
+//    private final static List<TodoList> database = new ArrayList<>();
+//    static {
+//        database.add(new TodoList("first_todoList"));
+//    }
 
     @GetMapping("/{name}")
     public TodoList getOne(@PathVariable String name){
         TodoList tempList = null;
         try{
-            tempList = findTodoListByName(name);
+            tempList = TodoListService.findTodoList(name);
         }
         catch(NoSuchElementException e){
             System.out.println(e.getMessage());
@@ -28,8 +28,9 @@ public class TodoListController {
     }
 
     @GetMapping("/")
-    public List<TodoList> getAll() {
-        return this.database;
+    public Iterable<TodoList> getAll() {
+        return TodoListService.findAllTodoLists();
+//        return this.database;
     }
 
     @PostMapping("/{name}")
@@ -42,14 +43,14 @@ public class TodoListController {
     }
 
     // Explore this method's appropriate home class. Does not belong among endpoints.
-    private TodoList findTodoListByName(String name) throws NoSuchElementException {
-        for(TodoList list : database)
-        {
-            // instead of looping through database, use hashtable for O(1) access.
-            if (list.getName().equals(name)){
-                return list;
-            }
-        }
-        throw new NoSuchElementException("Requested TodoList not found. To create a new TodoList <guidelines>.");
-    }
+//    private TodoList findTodoListByName(String name) throws NoSuchElementException {
+//        for(TodoList list : database)
+//        {
+//            // instead of looping through database, use hashtable for O(1) access.
+//            if (list.getName().equals(name)){
+//                return list;
+//            }
+//        }
+//        throw new NoSuchElementException("Requested TodoList not found. To create a new TodoList <guidelines>.");
+//    }
 }

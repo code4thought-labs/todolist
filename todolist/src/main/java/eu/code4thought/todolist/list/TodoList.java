@@ -12,25 +12,27 @@ import java.util.List;
 public class TodoList {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
+    // @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="todolist_id")
+    private int id;
+    @Column(name="todolist_name")
     private String name;
+    @Transient
     private List<ListItem> items;
-    private static long next_id = 0;
 
     public TodoList() {
-        this("defaultTodolist" + String.valueOf(next_id));
+        this("defaultTodolist");
     }
 
     public TodoList(String name) {
         this.name = name;
-        this.id = next_id;
-        next_id++;
+        this.id = System.identityHashCode(System.nanoTime());
         this.items = new ArrayList<>();
     }
 
     public ListItem createItem(String description) {
         ListItem new_item =  new ListItem(description);
+//      alternatively  item's father = this list
         this.items.add(new_item);
         return new_item;
     }
