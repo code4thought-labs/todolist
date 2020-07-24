@@ -9,13 +9,13 @@ import java.util.List;
 @Service ("todoListService")
 public class TodoListService {
     @Autowired
-    private static TodoListRepository listrepo;
+    private TodoListRepository listrepo;
     @Autowired
-    private static ListItemRepository itemrepo;
+    private ListItemRepository itemrepo;
 
-    public TodoListService() { this.listrepo = listrepo; this.itemrepo = itemrepo; }
+    public TodoListService() {}
 
-    public static TodoList saveTodoList(TodoList todoList){
+    public TodoList saveTodoList(TodoList todoList){
         TodoList element = null;
         try {
             element = listrepo.save(todoList);
@@ -26,7 +26,7 @@ public class TodoListService {
         return element;
     }
 
-    public static ListItem saveListItem(ListItem item){
+    public ListItem saveListItem(ListItem item){
         ListItem element = null;
         try {
             element = itemrepo.save(item);
@@ -37,7 +37,7 @@ public class TodoListService {
         return element;
     }
 
-    public static ListItem findListItem(String parentName, String description){
+    public ListItem findListItem(String parentName, String description){
         // Next step: Use parent, so you can allow distinct items, same description, different parents.
 //        TodoList parent = findTodoList(parentName);
         ListItem child = itemrepo.findByDescription(description);
@@ -50,15 +50,15 @@ public class TodoListService {
 //        return itemrepo.findByParent(parent);
 //    }
 
-    public static TodoList findTodoList(String name){
+    public TodoList findTodoList(String name){
         return listrepo.findByName(name);
     }
 
-    public static Iterable<TodoList> findAllTodoLists() {
+    public Iterable<TodoList> findAllTodoLists() {
         return listrepo.findAll();
     }
 
-    public static TodoList addItem(String name, String description) {
+    public TodoList addItem(String name, String description) {
         TodoList element = findTodoList(name);
         // Check if item already exists
         ListItem item = element.createItem(description);
@@ -67,7 +67,7 @@ public class TodoListService {
         return element;
     }
 
-    public static TodoList removeItem(String name, String itemDescription){
+    public TodoList removeItem(String name, String itemDescription){
         TodoList element = findTodoList(name);
         ListItem elementItem = findListItem(element.getName(), itemDescription);
         element.remove(elementItem);
@@ -75,7 +75,7 @@ public class TodoListService {
         return saveTodoList(element); // Seems like .save() checks for existence and handles .update() too.
     }
 
-    public static TodoList editItem(String name, String oldDescription, String newDescription){
+    public TodoList editItem(String name, String oldDescription, String newDescription){
         TodoList element = findTodoList(name);
         ListItem elementItem = findListItem(element.getName(), oldDescription);
         element.edit(elementItem, newDescription);
@@ -84,7 +84,7 @@ public class TodoListService {
         return saveTodoList(element); // Seems like .save() checks for existence and handles .update() too.
     }
 
-    public static TodoList moveItem(String sourceName, String targetName, String itemDescription){
+    public TodoList moveItem(String sourceName, String targetName, String itemDescription){
         TodoList source = findTodoList(sourceName);
         TodoList target = findTodoList(targetName);
         ListItem item = findListItem(source.getName(), itemDescription);
@@ -93,7 +93,7 @@ public class TodoListService {
         return saveTodoList(target); // Seems like .save() checks for existence and handles .update() too.
     }
 
-    public static void removeList(String name){
+    public void removeList(String name){
         TodoList element = findTodoList(name);
         element.removeAllItems();
         listrepo.delete(element);
