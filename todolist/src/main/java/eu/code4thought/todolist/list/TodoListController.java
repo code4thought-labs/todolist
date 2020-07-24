@@ -6,51 +6,50 @@ import java.util.*;
 @RestController
 @RequestMapping("/todolist")
 public class TodoListController {
-//    private final static List<TodoList> database = new ArrayList<>();
-//    static {
-//        database.add(new TodoList("first_todoList"));
-//    }
-
-    @GetMapping("/{name}")
-    public TodoList getOne(@PathVariable String name){
-        TodoList tempList = null;
-        try{
-            tempList = TodoListService.findTodoList(name);
-        }
-        catch(NoSuchElementException e){
-            System.out.println(e.getMessage());
-            // Maybe not System.out.println but return the message to user (somehow)... Explore this.
-        }
-        return tempList;
-        // Why this is not showing anything, but getAll() works?
-        // Connect to: http://localhost:8080/todolist/123
-        // or Curl: `curl localhost:8080/todolist/123`
-    }
 
     @GetMapping("/")
     public Iterable<TodoList> getAll() {
+        // Here there is a NullPointerException. Fix this.
         return TodoListService.findAllTodoLists();
-//        return this.database;
     }
 
-    @PostMapping("/{name}")
-    public TodoList createTodoList(@PathVariable String name){
-        // First check if the list already exists
-        //TodoList tempCreate = new TodoList(name);
-        //database.add(tempCreate);
-        TodoList savedTodoList = TodoListService.saveTodoList(new TodoList(name));
-        return savedTodoList;
+    @GetMapping("/{list}")
+    public TodoList getOne(@PathVariable String list){
+        return TodoListService.findTodoList(list);
     }
 
-    // Explore this method's appropriate home class. Does not belong among endpoints.
-//    private TodoList findTodoListByName(String name) throws NoSuchElementException {
-//        for(TodoList list : database)
-//        {
-//            // instead of looping through database, use hashtable for O(1) access.
-//            if (list.getName().equals(name)){
-//                return list;
-//            }
-//        }
-//        throw new NoSuchElementException("Requested TodoList not found. To create a new TodoList <guidelines>.");
-//    }
+    @GetMapping("/{list}/{item}")
+    public ListItem getOneItem(@PathVariable String list, @PathVariable String item){
+        return TodoListService.findListItem(list, item);
+    }
+
+    @PostMapping("/{list}")
+    public TodoList createTodoList(@PathVariable String list){
+        return TodoListService.saveTodoList(new TodoList(list));
+    }
+
+    @PostMapping("/add/{list}/{item}")
+    public TodoList addListItem(@PathVariable String list, @PathVariable String item){
+        return TodoListService.addItem(list, item);
+    }
+
+    @DeleteMapping("/remove/{list}/{item}")
+    public TodoList removeListItem(@PathVariable String list, @PathVariable String item){
+        return TodoListService.removeItem(list, item);
+    }
+
+    @DeleteMapping("/remove/{list}")
+    public void removeListItem(@PathVariable String list){
+        TodoListService.removeList(list);
+    }
+
+    @PutMapping("/move/{list}/{item}/{target}")
+    public TodoList moveTodoList(@PathVariable String list, @PathVariable String item, @PathVariable String target) {
+        return TodoListService.moveItem(list, target, item);
+    }
+
+    @PutMapping("/update/{list}/{oldItem}/{newItem}")
+    public TodoList updateTodoList(@PathVariable String list, @PathVariable String oldItem, @PathVariable String newItem){
+                return TodoListService.editItem(list, oldItem, newItem);
+    }
 }

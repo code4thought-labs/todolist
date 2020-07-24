@@ -19,6 +19,7 @@ public class TodoList {
     @Column(name="todolist_name")
     private String name;
     @Transient
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="todolist")
     private List<ListItem> items;
 
     public TodoList() {
@@ -33,13 +34,18 @@ public class TodoList {
 
     public ListItem createItem(String description) {
         ListItem new_item =  new ListItem(description, this);
-//      alternatively  item's father = this list
         this.items.add(new_item);
         return new_item;
     }
 
     public void remove(ListItem item) {
         this.items.remove(item);
+    }
+
+    public void removeAllItems(){
+        for (ListItem listItem : this.items) {
+            remove(listItem);
+        }
     }
 
     public void edit(ListItem item, String description) {
@@ -83,7 +89,7 @@ public class TodoList {
         if (getClass() != obj.getClass())
             return false;
         TodoList other = (TodoList) obj;
-        return Objects.equals(id, other.getId());
+        return Objects.equals(this.id, other.getId());
     }
 
 }

@@ -1,20 +1,23 @@
 package eu.code4thought.todolist.list;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TodoListTest {
-    private static TodoList todoList;
+    private TodoList todoList;
 
-    @BeforeAll
-    static void setUp(){
+    @BeforeEach
+    void setUp(){
+        System.out.println("Start");
         todoList = new TodoList();
     }
 
     @Test
     void createItem() {
+        System.out.println("Testing createItem()...");
         String testDescription = "Test description.";
         ListItem item = todoList.createItem(testDescription);
 
@@ -25,6 +28,7 @@ class TodoListTest {
 
     @Test
     void remove() {
+        System.out.println("Testing remove()...");
         String testDescription = "Test description.";
         ListItem item = todoList.createItem(testDescription);
         todoList.remove(item);
@@ -34,17 +38,19 @@ class TodoListTest {
 
     @Test
     void edit() {
+        System.out.println("Testing edit()...");
         String testDescription = "Test description.";
         ListItem item = todoList.createItem(testDescription);
 
         String differentDescription = "Different description.";
         todoList.edit(item, differentDescription);
 
-        assertEquals(item.getDescription(), differentDescription);
+        assertEquals(differentDescription, item.getDescription());
     }
 
     @Test
     void move() {
+        System.out.println("Testing move()...");
         String testDescription = "Test description.";
         ListItem item = todoList.createItem(testDescription);
 
@@ -55,5 +61,13 @@ class TodoListTest {
         assertEquals(1,to.getLength());
         assertEquals(0,todoList.getLength());
         assertEquals(true, item.getDescription().equals(testDescription));
+    }
+
+    @Test
+    void equals() {
+        System.out.println("Testing equals()...");
+        TodoList to = new TodoList();
+
+        assertFalse(todoList == to);
     }
 }

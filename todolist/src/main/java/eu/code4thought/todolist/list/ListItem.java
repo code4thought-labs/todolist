@@ -1,15 +1,27 @@
 package eu.code4thought.todolist.list;
 
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name="listitem")
 public class ListItem {
-    private String description = "";
+
+    @Id
+    // @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "listitem_id")
     private int id;
-    private TodoList parent;
+    @Column(name="listitem_desc")
+    private String description = "";
+//    @Column(name = "todolist_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    public TodoList parent;
+    @Column(name="last_updated")
     private Date last_updated = Calendar.getInstance().getTime();
+    @Column(name="completed")
     private boolean completed = false;
 
     public ListItem() {
