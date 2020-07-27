@@ -13,13 +13,12 @@ import java.util.Objects;
 public class TodoList {
 
     @Id
-    // @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="todolist_id")
-    private int id;
+    private Long id;
     @Column(name="todolist_name")
     private String name;
     @Transient
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="todolist")
     private List<ListItem> items;
 
     public TodoList() {
@@ -28,7 +27,7 @@ public class TodoList {
 
     public TodoList(String name) {
         this.name = name;
-        this.id = System.identityHashCode(System.nanoTime()); // Not beautiful, please make @GeneratedValue work.
+        // this.id = System.identityHashCode(System.nanoTime()); // Not beautiful, please make @GeneratedValue work.
         this.items = new ArrayList<>();
     }
 
@@ -36,6 +35,12 @@ public class TodoList {
         ListItem new_item =  new ListItem(description, this);
         this.items.add(new_item);
         return new_item;
+    }
+
+    public void addItems(List<ListItem> itlist){
+        for (ListItem it: itlist){
+            this.items.add(it);
+        }
     }
 
     public void remove(ListItem item) {
@@ -68,7 +73,7 @@ public class TodoList {
         return this.name;
     }
 
-    public int getId() { return this.id;}
+    public Long getId() { return this.id;}
 
     public void move(ListItem item, TodoList to) {
         to.createItem(item.getDescription());

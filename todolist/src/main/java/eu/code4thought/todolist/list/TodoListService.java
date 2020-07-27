@@ -15,26 +15,12 @@ public class TodoListService {
 
     public TodoListService() {}
 
-    public TodoList saveTodoList(TodoList todoList){
-        TodoList element = null;
-        try {
-            element = listrepo.save(todoList);
-        }
-        catch(Exception e){
-            System.out.println("Some message:"+ e.getMessage());
-        }
-        return element;
+    public void saveTodoList(TodoList todoList){
+        listrepo.save(todoList);
     }
 
-    public ListItem saveListItem(ListItem item){
-        ListItem element = null;
-        try {
-            element = itemrepo.save(item);
-        }
-        catch(Exception e){
-            System.out.println("Some message about items:"+ e.getMessage());
-        }
-        return element;
+    public void saveListItem(ListItem item){
+        itemrepo.save(item);
     }
 
     public ListItem findListItem(String parentName, String description){
@@ -51,20 +37,30 @@ public class TodoListService {
 //    }
 
     public TodoList findTodoList(String name){
-        return listrepo.findByName(name);
+        TodoList todolist = listrepo.findByName(name);
+        Iterable<ListItem> it = itemrepo.findByParentId(todolist.getId());
+        List<ListItem> target = new ArrayList<>();
+        it.forEach(target::add);
+        todolist.addItems(target);
+        return todolist;
     }
 
     public Iterable<TodoList> findAllTodoLists() {
-        return listrepo.findAll();
+        // add their items too!
+        Iterable<TodoList> it = listrepo.findAll();
+        for (TodoList todolist: it) {
+            findTodoList(todolist.getName());
+        }
+        return it;
     }
 
     public TodoList addItem(String name, String description) {
-        TodoList element = findTodoList(name);
+        TodoList todolist = findTodoList(name);
         // Check if item already exists
-        ListItem item = element.createItem(description);
-        saveTodoList(element); // Seems like .save() checks for existence and handles .update() too.
+        ListItem item = todolist.createItem(description);
         saveListItem(item);
-        return element;
+//        saveTodoList(todolist); // Seems like .save() checks for existence and handles .update() too.
+        return todolist;
     }
 
     public TodoList removeItem(String name, String itemDescription){
@@ -72,7 +68,8 @@ public class TodoListService {
         ListItem elementItem = findListItem(element.getName(), itemDescription);
         element.remove(elementItem);
         itemrepo.delete(elementItem);
-        return saveTodoList(element); // Seems like .save() checks for existence and handles .update() too.
+        saveTodoList(element); // Seems like .save() checks for existence and handles .update() too.
+        return element;
     }
 
     public TodoList editItem(String name, String oldDescription, String newDescription){
@@ -81,7 +78,8 @@ public class TodoListService {
         element.edit(elementItem, newDescription);
         // save TodoList or both TodoList and ListItem. I have to check this.
         saveListItem(elementItem);
-        return saveTodoList(element); // Seems like .save() checks for existence and handles .update() too.
+        saveTodoList(element); // Seems like .save() checks for existence and handles .update() too.
+        return element;
     }
 
     public TodoList moveItem(String sourceName, String targetName, String itemDescription){
@@ -90,12 +88,14 @@ public class TodoListService {
         ListItem item = findListItem(source.getName(), itemDescription);
         source.move(item, target);
         // Chose to return target for better user experience
-        return saveTodoList(target); // Seems like .save() checks for existence and handles .update() too.
+        saveTodoList(target); // Seems like .save() checks for existence and handles .update() too.
+        return target;
     }
 
     public void removeList(String name){
         TodoList element = findTodoList(name);
         element.removeAllItems();
+        // deleteAll(element.items); implement it. not right.
         listrepo.delete(element);
     }
 }

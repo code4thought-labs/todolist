@@ -28,7 +28,9 @@ public class TodoListController {
 
     @PostMapping("/{list}")
     public TodoList createTodoList(@PathVariable String list){
-        return service.saveTodoList(new TodoList(list));
+        TodoList todolist = new TodoList(list);
+        service.saveTodoList(todolist);
+        return todolist;
     }
 
     @PostMapping("/add/{list}/{item}")

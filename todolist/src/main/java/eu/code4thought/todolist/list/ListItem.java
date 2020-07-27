@@ -11,14 +11,13 @@ import java.util.Objects;
 public class ListItem {
 
     @Id
-    // @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "listitem_id")
-    private int id;
+    private Long id;
     @Column(name="listitem_desc")
     private String description = "";
-//    @Column(name = "todolist_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    public TodoList parent;
+    @Column(name = "todolist_id")
+    public Long parentId;
     @Column(name="last_updated")
     private Date last_updated = Calendar.getInstance().getTime();
     @Column(name="completed")
@@ -30,8 +29,8 @@ public class ListItem {
 
     public ListItem(String description, TodoList parent) {
         this.description = description;
-        this.id = System.identityHashCode(System.nanoTime());
-        this.parent = parent;
+        // this.id = System.identityHashCode(System.nanoTime());
+        this.parentId = parent.getId();
         this.last_updated = Calendar.getInstance().getTime();
     }
 
@@ -52,17 +51,17 @@ public class ListItem {
         return last_updated;
     }
 
-    public int getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public TodoList getParent(){
-        return this.parent;
+    public Long getParent(){
+        return this.parentId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.parent.getId());
+        return Objects.hash(this.id, this.getParent());
     }
 
     @Override
@@ -74,6 +73,6 @@ public class ListItem {
             return false;
         }
         ListItem other = (ListItem) obj;
-        return Objects.equals(id, other.getId());
+        return Objects.equals(this.getId(), other.getId());
     }
 }

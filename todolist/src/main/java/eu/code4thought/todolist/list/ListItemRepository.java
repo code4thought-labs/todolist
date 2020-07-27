@@ -10,7 +10,7 @@ public interface ListItemRepository extends CrudRepository<ListItem, Integer> {
 
     Optional<ListItem> findById(int id);
     ListItem findByDescription(String description);
-    Iterable<ListItem> findByParent(TodoList parent);
+    Iterable<ListItem> findByParentId(Long parentId);
     Iterable<ListItem> findAll();
     void delete(ListItem item);
     void deleteAll();
