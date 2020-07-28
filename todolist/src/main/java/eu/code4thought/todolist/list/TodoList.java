@@ -68,6 +68,10 @@ public class TodoList {
     public List<ListItem> getItems() {
         return Collections.unmodifiableList(items);
     }
+//
+//    public ListItem getItem(ListItem item) {
+//        return this.items.get(this.items.indexOf(item));
+//    }
 
     public String getName() {
         return this.name;
@@ -76,7 +80,12 @@ public class TodoList {
     public Long getId() { return this.id;}
 
     public void move(ListItem item, TodoList to) {
-        to.createItem(item.getDescription());
+        for (ListItem listItem : this.items) {
+            if(listItem.getId().equals(item.getId())){
+                listItem.setParentId(to.getId());
+                to.items.add(listItem);
+            }
+        }
         this.remove(item);
     }
 

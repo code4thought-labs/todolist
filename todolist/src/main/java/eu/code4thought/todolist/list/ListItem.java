@@ -19,7 +19,7 @@ public class ListItem {
     @Column(name = "todolist_id")
     public Long parentId;
     @Column(name="last_updated")
-    private Date last_updated = Calendar.getInstance().getTime();
+    private Date last_updated;
     @Column(name="completed")
     private boolean completed = false;
 
@@ -31,7 +31,6 @@ public class ListItem {
         this.description = description;
         // this.id = System.identityHashCode(System.nanoTime());
         this.parentId = parent.getId();
-        this.last_updated = Calendar.getInstance().getTime();
     }
 
     public boolean isCompleted() {
@@ -44,7 +43,6 @@ public class ListItem {
 
     public void setDescription(String description) {
         this.description = description;
-        this.last_updated = Calendar.getInstance().getTime();
     }
 
     public Date getLastUpdated() {
@@ -55,13 +53,17 @@ public class ListItem {
         return this.id;
     }
 
-    public Long getParent(){
+    public Long getParentId(){
         return this.parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.getParent());
+        return Objects.hash(this.id, this.getParentId());
     }
 
     @Override

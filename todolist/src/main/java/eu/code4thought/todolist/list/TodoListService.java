@@ -31,10 +31,10 @@ public class TodoListService {
     }
 
     // Not needed yet, but it will make my life easier down the road.
-//    public static Iterable<ListItem> findTodoListItems(String parentName){
-//        TodoList parent = findTodoList(parentName);
-//        return itemrepo.findByParent(parent);
-//    }
+    public Iterable<ListItem> findTodoListItems(String parentName){
+        TodoList parent = findTodoList(parentName);
+        return itemrepo.findByParentId(parent.getId());
+    }
 
     public TodoList findTodoList(String name){
         TodoList todolist = listrepo.findByName(name);
@@ -73,13 +73,12 @@ public class TodoListService {
     }
 
     public TodoList editItem(String name, String oldDescription, String newDescription){
-        TodoList element = findTodoList(name);
-        ListItem elementItem = findListItem(element.getName(), oldDescription);
-        element.edit(elementItem, newDescription);
-        // save TodoList or both TodoList and ListItem. I have to check this.
-        saveListItem(elementItem);
-        saveTodoList(element); // Seems like .save() checks for existence and handles .update() too.
-        return element;
+        TodoList todolist = findTodoList(name);
+        ListItem item = findListItem(todolist.getName(), oldDescription);
+        todolist.edit(item, newDescription);
+        saveListItem(item);
+        saveTodoList(todolist);
+        return todolist;
     }
 
     public TodoList moveItem(String sourceName, String targetName, String itemDescription){
@@ -87,15 +86,15 @@ public class TodoListService {
         TodoList target = findTodoList(targetName);
         ListItem item = findListItem(source.getName(), itemDescription);
         source.move(item, target);
-        // Chose to return target for better user experience
-        saveTodoList(target); // Seems like .save() checks for existence and handles .update() too.
+        saveListItem(item);
+        saveTodoList(target);
         return target;
     }
 
     public void removeList(String name){
-        TodoList element = findTodoList(name);
-        element.removeAllItems();
-        // deleteAll(element.items); implement it. not right.
-        listrepo.delete(element);
+        TodoList todolist = findTodoList(name);
+        Iterable<ListItem> it = itemrepo.findByParentId(todolist.getId());
+        itemrepo.deleteAll(it);
+        listrepo.delete(todolist);
     }
 }

@@ -13,5 +13,5 @@ public interface ListItemRepository extends CrudRepository<ListItem, Integer> {
     Iterable<ListItem> findByParentId(Long parentId);
     Iterable<ListItem> findAll();
     void delete(ListItem item);
-    void deleteAll();
+    void deleteAll(Iterable<? extends ListItem> items);
 }
