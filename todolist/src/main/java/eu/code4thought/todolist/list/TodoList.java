@@ -27,7 +27,6 @@ public class TodoList {
 
     public TodoList(String name) {
         this.name = name;
-        // this.id = System.identityHashCode(System.nanoTime()); // Not beautiful, please make @GeneratedValue work.
         this.items = new ArrayList<>();
     }
 
@@ -43,16 +42,6 @@ public class TodoList {
         }
     }
 
-    public void remove(ListItem item) {
-        this.items.remove(item);
-    }
-
-    public void removeAllItems(){
-        for (ListItem listItem : this.items) {
-            remove(listItem);
-        }
-    }
-
     public void edit(ListItem item, String description) {
         for (ListItem listItem : this.items) {
             if(listItem.getId() == item.getId()){
@@ -60,24 +49,6 @@ public class TodoList {
             }
         }
     }
-
-    public int getLength() {
-        return this.items.size();
-    }
-
-    public List<ListItem> getItems() {
-        return Collections.unmodifiableList(items);
-    }
-//
-//    public ListItem getItem(ListItem item) {
-//        return this.items.get(this.items.indexOf(item));
-//    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Long getId() { return this.id;}
 
     public void move(ListItem item, TodoList to) {
         for (ListItem listItem : this.items) {
@@ -88,6 +59,28 @@ public class TodoList {
         }
         this.remove(item);
     }
+
+    public void remove(ListItem item) {
+        this.items.remove(item);
+    }
+
+    public int getLength() {
+        return this.items.size();
+    }
+
+    public List<ListItem> getItems() {
+        return Collections.unmodifiableList(items);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String newName){
+        this.name = newName;
+    }
+
+    public Long getId() { return this.id;}
 
     @Override
     public int hashCode() {

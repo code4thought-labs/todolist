@@ -1,9 +1,9 @@
 package eu.code4thought.todolist.list;
 
+import org.springframework.data.annotation.LastModifiedDate;
+
 import javax.persistence.*;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +19,7 @@ public class ListItem {
     @Column(name = "todolist_id")
     public Long parentId;
     @Column(name="last_updated")
+    @LastModifiedDate
     private Date last_updated;
     @Column(name="completed")
     private boolean completed = false;
@@ -29,12 +30,15 @@ public class ListItem {
 
     public ListItem(String description, TodoList parent) {
         this.description = description;
-        // this.id = System.identityHashCode(System.nanoTime());
         this.parentId = parent.getId();
     }
 
     public boolean isCompleted() {
         return this.completed;
+    }
+
+    public void setCompleted() {
+        this.completed = !this.isCompleted();
     }
 
     public String getDescription() {

@@ -8,8 +8,6 @@ import java.util.Optional;
 @Repository ("listItemRepository")
 public interface ListItemRepository extends CrudRepository<ListItem, Integer> {
 
-    Optional<ListItem> findById(int id);
-    ListItem findByDescription(String description);
     Iterable<ListItem> findByParentId(Long parentId);
     Iterable<ListItem> findAll();
     void delete(ListItem item);

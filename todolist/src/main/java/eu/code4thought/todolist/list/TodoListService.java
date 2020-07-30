@@ -15,27 +15,6 @@ public class TodoListService {
 
     public TodoListService() {}
 
-    public void saveTodoList(TodoList todoList){
-        listrepo.save(todoList);
-    }
-
-    public void saveListItem(ListItem item){
-        itemrepo.save(item);
-    }
-
-    public ListItem findListItem(String parentName, String description){
-        // Next step: Use parent, so you can allow distinct items, same description, different parents.
-//        TodoList parent = findTodoList(parentName);
-        ListItem child = itemrepo.findByDescription(description);
-        return child;
-    }
-
-    // Not needed yet, but it will make my life easier down the road.
-    public Iterable<ListItem> findTodoListItems(String parentName){
-        TodoList parent = findTodoList(parentName);
-        return itemrepo.findByParentId(parent.getId());
-    }
-
     public TodoList findTodoList(String name){
         TodoList todolist = listrepo.findByName(name);
         Iterable<ListItem> it = itemrepo.findByParentId(todolist.getId());
@@ -43,6 +22,23 @@ public class TodoListService {
         it.forEach(target::add);
         todolist.addItems(target);
         return todolist;
+    }
+
+    public TodoList editTodoList(String name, String target){
+        TodoList todolist = findTodoList(name);
+        todolist.setName(target);
+        return todolist;
+    }
+
+    public void removeList(String name){
+        TodoList todolist = findTodoList(name);
+        Iterable<ListItem> it = itemrepo.findByParentId(todolist.getId());
+        itemrepo.deleteAll(it);
+        listrepo.delete(todolist);
+    }
+
+    public void saveTodoList(TodoList todoList){
+        listrepo.save(todoList);
     }
 
     public Iterable<TodoList> findAllTodoLists() {
@@ -54,12 +50,24 @@ public class TodoListService {
         return it;
     }
 
+    public ListItem findListItem(String parentName, String description){
+        TodoList todolist = findTodoList(parentName);
+        ListItem child = null;
+        Iterable<ListItem> it = itemrepo.findByParentId(todolist.getId());
+        for (ListItem ch: it){
+            if (ch.getDescription().equals(description)){
+                child = ch;
+            }
+        }
+        return child;
+    }
+
     public TodoList addItem(String name, String description) {
         TodoList todolist = findTodoList(name);
         // Check if item already exists
+//        List<ListItem> it = itemrepo.findByParentId(todolist.getId());
         ListItem item = todolist.createItem(description);
         saveListItem(item);
-//        saveTodoList(todolist); // Seems like .save() checks for existence and handles .update() too.
         return todolist;
     }
 
@@ -68,7 +76,7 @@ public class TodoListService {
         ListItem elementItem = findListItem(element.getName(), itemDescription);
         element.remove(elementItem);
         itemrepo.delete(elementItem);
-        saveTodoList(element); // Seems like .save() checks for existence and handles .update() too.
+        saveTodoList(element);
         return element;
     }
 
@@ -81,7 +89,15 @@ public class TodoListService {
         return todolist;
     }
 
-    public TodoList moveItem(String sourceName, String targetName, String itemDescription){
+    public TodoList markComplete(String name, String item){
+        TodoList todolist = findTodoList(name);
+        ListItem listitem = findListItem(name, item);
+        listitem.setCompleted();
+        saveListItem(listitem);
+        return todolist;
+    }
+
+    public TodoList moveItem(String sourceName, String itemDescription, String targetName){
         TodoList source = findTodoList(sourceName);
         TodoList target = findTodoList(targetName);
         ListItem item = findListItem(source.getName(), itemDescription);
@@ -91,10 +107,8 @@ public class TodoListService {
         return target;
     }
 
-    public void removeList(String name){
-        TodoList todolist = findTodoList(name);
-        Iterable<ListItem> it = itemrepo.findByParentId(todolist.getId());
-        itemrepo.deleteAll(it);
-        listrepo.delete(todolist);
+    public void saveListItem(ListItem item){
+        itemrepo.save(item);
     }
+
 }
