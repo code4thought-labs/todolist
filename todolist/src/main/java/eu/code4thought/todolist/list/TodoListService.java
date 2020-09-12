@@ -27,6 +27,7 @@ public class TodoListService {
     public TodoList editTodoList(String name, String target){
         TodoList todolist = findTodoList(name);
         todolist.setName(target);
+        saveTodoList(todolist);
         return todolist;
     }
 
@@ -76,22 +77,23 @@ public class TodoListService {
         ListItem elementItem = findListItem(element.getName(), itemDescription);
         element.remove(elementItem);
         itemrepo.delete(elementItem);
+        element.remove(elementItem);
         saveTodoList(element);
         return element;
     }
 
-    public TodoList editItem(String name, String oldDescription, String newDescription){
-        TodoList todolist = findTodoList(name);
-        ListItem item = findListItem(todolist.getName(), oldDescription);
+    public TodoList editItem(String listName, String oldDescription, String newDescription){
+        TodoList todolist = findTodoList(listName);
+        ListItem item = findListItem(listName, oldDescription);
         todolist.edit(item, newDescription);
         saveListItem(item);
-        saveTodoList(todolist);
+//        saveTodoList(todolist);
         return todolist;
     }
 
-    public TodoList markComplete(String name, String item){
-        TodoList todolist = findTodoList(name);
-        ListItem listitem = findListItem(name, item);
+    public TodoList markComplete(String listName, String item){
+        TodoList todolist = findTodoList(listName);
+        ListItem listitem = findListItem(listName, item);
         listitem.setCompleted();
         saveListItem(listitem);
         return todolist;
@@ -100,9 +102,10 @@ public class TodoListService {
     public TodoList moveItem(String sourceName, String itemDescription, String targetName){
         TodoList source = findTodoList(sourceName);
         TodoList target = findTodoList(targetName);
-        ListItem item = findListItem(source.getName(), itemDescription);
+        ListItem item = findListItem(sourceName, itemDescription);
         source.move(item, target);
         saveListItem(item);
+        saveTodoList(source);
         saveTodoList(target);
         return target;
     }

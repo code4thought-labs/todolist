@@ -29,7 +29,6 @@ public class TodoListController {
         return todolist;
     }
 
-    // TODO: Not saved in the database
     @PutMapping("/{list}")
     public TodoList editTodoList(@PathVariable String list, @RequestParam String action, @RequestParam String target){
         TodoList todolist = null;
@@ -39,9 +38,8 @@ public class TodoListController {
         return todolist;
     }
 
-    // TODO: Not working
     @DeleteMapping("/{list}")
-    public void removeListItem(@PathVariable String list, @RequestParam String action){
+    public void removeList(@PathVariable String list, @RequestParam String action){
         if (Objects.equals(action, "remove")){
             service.removeList(list);
         }
@@ -61,24 +59,22 @@ public class TodoListController {
         return todolist;
     }
 
-    // TODO: Returns wrong state of todolist. Probably not saved.
-    // TODO: To not be error prone, interface with constants. See Actions.java.
+    // TODO: Update action returns todolist of double the real size, but not in DB. Duplication of entries.
     @PutMapping("/{list}/{item}")
-    public TodoList moveTodoList(@PathVariable String list, @PathVariable String item, @RequestParam String action, @RequestParam(required = false) String target) {
+    public TodoList editTodoListItem(@PathVariable String list, @PathVariable String item, @RequestParam String action, @RequestParam(required = false) String target) {
         TodoList todolist = new TodoList(list);
         if (Objects.equals(action.toLowerCase(), Actions.MOVE)){
             todolist = service.moveItem(list, item, target);
         }
-        else if (Objects.equals(action, "update")) {
+        else if (Objects.equals(action.toLowerCase(), Actions.UPDATE)) {
             todolist = service.editItem(list, item, target);
         }
-        else if (Objects.equals(action, "complete")) {
+        else if (Objects.equals(action.toLowerCase(), Actions.MARK_COMPLETE)) {
             todolist = service.markComplete(list, item);
         }
         return todolist;
     }
 
-    // TODO: Returns wrong state of todolist. Probably not saved.
     @DeleteMapping("/{list}/{item}")
     public TodoList removeListItem(@PathVariable String list, @PathVariable String item, @RequestParam String action){
         TodoList todolist = new TodoList(list);

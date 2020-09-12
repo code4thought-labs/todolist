@@ -46,6 +46,7 @@ public class TodoList {
         for (ListItem listItem : this.items) {
             if(listItem.getId() == item.getId()){
                 listItem.setDescription(description);
+                break;
             }
         }
     }
@@ -55,9 +56,10 @@ public class TodoList {
             if(listItem.getId().equals(item.getId())){
                 listItem.setParentId(to.getId());
                 to.items.add(listItem);
+                this.remove(listItem);
+                break;
             }
         }
-        this.remove(item);
     }
 
     public void remove(ListItem item) {
