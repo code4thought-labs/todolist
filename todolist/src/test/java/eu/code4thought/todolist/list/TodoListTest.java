@@ -45,6 +45,7 @@ class TodoListTest {
         todoList.edit(item, differentDescription);
 
         assertEquals(differentDescription, item.getDescription());
+        assertEquals(1,todoList.getLength());
     }
 
     @Test
@@ -53,7 +54,7 @@ class TodoListTest {
         String testDescription = "Test description.";
         ListItem item = todoList.createItem(testDescription);
 
-        TodoList to = new TodoList();
+        TodoList to = new TodoList("newTodoList");
 
         todoList.move(item, to);
 

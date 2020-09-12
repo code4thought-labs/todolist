@@ -87,7 +87,7 @@ public class TodoListService {
         ListItem item = findListItem(listName, oldDescription);
         todolist.edit(item, newDescription);
         saveListItem(item);
-//        saveTodoList(todolist);
+        saveTodoList(todolist);
         return todolist;
     }
 

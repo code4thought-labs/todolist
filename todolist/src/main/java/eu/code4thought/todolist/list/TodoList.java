@@ -36,6 +36,10 @@ public class TodoList {
         return new_item;
     }
 
+    public void addItem(ListItem item){
+        this.items.add(item);
+    }
+
     public void addItems(List<ListItem> itlist){
         for (ListItem it: itlist){
             this.items.add(it);
@@ -44,7 +48,7 @@ public class TodoList {
 
     public void edit(ListItem item, String description) {
         for (ListItem listItem : this.items) {
-            if(listItem.getId() == item.getId()){
+            if(listItem.equals(item)){
                 listItem.setDescription(description);
                 break;
             }
@@ -53,10 +57,10 @@ public class TodoList {
 
     public void move(ListItem item, TodoList to) {
         for (ListItem listItem : this.items) {
-            if(listItem.getId().equals(item.getId())){
-                listItem.setParentId(to.getId());
-                to.items.add(listItem);
-                this.remove(listItem);
+            if(listItem.equals(item)){
+                item.setParentId(to.getId());
+                to.addItem(item);
+                this.remove(item);
                 break;
             }
         }
